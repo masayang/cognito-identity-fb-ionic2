@@ -11,6 +11,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { FacebookService } from '../providers/facebook/facebook-service';
 import { Facebook } from '@ionic-native/facebook';
 import { EventsService } from "../providers/commons/events-service";
+import { CognitoUtil } from "../providers/cognito/cognito-service";
+import { AWSService } from "../providers/aws/aws-service";
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import { EventsService } from "../providers/commons/events-service";
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     FacebookService,
     Facebook,
-    EventsService
+    EventsService,
+    CognitoUtil,
+    AWSService
   ]
 })
 export class AppModule {}

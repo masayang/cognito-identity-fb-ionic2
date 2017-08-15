@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import { EventsService } from "../commons/events-service";
+import { AWSService } from "../aws/aws-service";
 
 @Injectable()
 export class FacebookService {
 
-  constructor(public eventService: EventsService, private fb: Facebook) {
+  constructor(public awsService: AWSService, public eventService: EventsService, private fb: Facebook) {
     console.log('Hello FacebookLoginProvider Provider');
   }
 
@@ -15,7 +16,7 @@ export class FacebookService {
     return new Promise((resolve, reject) => {
       this.fb.getLoginStatus().then((s) => {
         console.log("FacebookLoginStatus=", s);
-        if (s.status == "connected") 
+        if (s.status == "connected")
           myThis.eventService.sendFacebookLoggedInEvent();
         else
           myThis.eventService.sendFacebookLoggedOutEvent();
@@ -35,6 +36,8 @@ export class FacebookService {
       this.fb.login(['public_profile'])
         .then((res: FacebookLoginResponse) => {
           console.log('Logged into Facebook!', res);
+          this.awsService.setFacebookToken(res.authResponse.accessToken);
+
           myThis.eventService.sendFacebookLoggedInEvent();
           resolve();
         })
@@ -64,14 +67,14 @@ export class FacebookService {
   getUserInfo() {
     return new Promise((resolve, reject) => {
       this.fb.api('/me?fields=id,name,short_name', [])
-      .then(data => {
-        console.log("API result:", data);
-        resolve(data);
-      })
-      .catch(err => {
-        console.log("API error:", err);
-        reject(err);
-      })
+        .then(data => {
+          console.log("API result:", data);
+          resolve(data);
+        })
+        .catch(err => {
+          console.log("API error:", err);
+          reject(err);
+        })
     })
   }
 }
