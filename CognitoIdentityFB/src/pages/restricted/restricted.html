@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Restricted Page</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <h3>Cognito Identity Pool Demo</h3>
+
+  <ion-list>
+    <button ion-item color="danger" (click)="callAuthorizedHello()">Call Restricted Method</button>
+    <ion-item>{{ result.greeting }}</ion-item>
+    <ion-item>{{ result.message }}</ion-item>
+  </ion-list>
+</ion-content>

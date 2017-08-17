@@ -27,7 +27,6 @@ export interface Callback {
 export class CognitoUtil {
 
     constructor() {
-        console.log("CognitoUtil constructor");
     }
 
     getUserPool() {

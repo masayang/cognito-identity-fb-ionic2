@@ -5,7 +5,6 @@ import { AWSService } from "../aws/aws-service";
 
 @Injectable()
 export class FacebookService {
-
   constructor(public awsService: AWSService, public eventService: EventsService, private fb: Facebook) {
     console.log('Hello FacebookLoginProvider Provider');
   }
@@ -16,10 +15,14 @@ export class FacebookService {
     return new Promise((resolve, reject) => {
       this.fb.getLoginStatus().then((s) => {
         console.log("FacebookLoginStatus=", s);
-        if (s.status == "connected")
+        if (s.status == "connected") {
+          myThis.awsService.setFacebookToken(s.authResponse.accessToken);
           myThis.eventService.sendFacebookLoggedInEvent();
-        else
+        }
+        else {
+          myThis.awsService.setFacebookToken(null);
           myThis.eventService.sendFacebookLoggedOutEvent();
+        }
         resolve();
       }).catch((err) => {
         console.log("Error in getLoginStatus:", err);
@@ -37,7 +40,6 @@ export class FacebookService {
         .then((res: FacebookLoginResponse) => {
           console.log('Logged into Facebook!', res);
           this.awsService.setFacebookToken(res.authResponse.accessToken);
-
           myThis.eventService.sendFacebookLoggedInEvent();
           resolve();
         })
@@ -55,6 +57,7 @@ export class FacebookService {
       this.fb.logout()
         .then(() => {
           myThis.eventService.sendFacebookLoggedOutEvent();
+          myThis.awsService.setFacebookToken(null);
           resolve();
         })
         .catch(e => {
